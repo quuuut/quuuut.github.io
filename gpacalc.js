@@ -1,4 +1,4 @@
-if (window.location.href.includes("Assessment_Results")) {
+var count = 0; var sum = 0;if (window.location.href.includes("Assessment_Results")) {
 var term = prompt("Enter Term (1, 2, 3, or 4, to do multiple use spaces, such as '1 2')");
 
 fetch("/daymap/curriculum/ResultFilters.aspx", {
@@ -31,8 +31,6 @@ fetch("/daymap/curriculum/ResultFilters.aspx", {
                           sum += gpa
                         }
                       });
-                      if (sum == 0) {LoopToast.showError("No GPA Found", "No GPA found for the selected term(s).");}
-                      
                     })
                   })
                 }
