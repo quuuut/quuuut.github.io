@@ -1,4 +1,6 @@
-javascript: var round = true; var rounddecimals = 2;var count = 0; var sum = 0; var term = prompt("Enter Term (1, 2, 3, or 4, to do multiple use spaces, such as '1 2')");
+if (window.location.href.includes("Assessment_Results")) {
+var term = prompt("Enter Term (1, 2, 3, or 4, to do multiple use spaces, such as '1 2')");
+
 fetch("/daymap/curriculum/ResultFilters.aspx", {
     "headers": {
       "accept": "text/html"
@@ -29,6 +31,7 @@ fetch("/daymap/curriculum/ResultFilters.aspx", {
                           sum += gpa
                         }
                       });
+                      if (sum == 0) {LoopToast.showError("No GPA Found", "No GPA found for the selected term(s).");}
                       
                     })
                   })
@@ -39,3 +42,6 @@ fetch("/daymap/curriculum/ResultFilters.aspx", {
     setTimeout(()=>{
     LoopToast.showSuccess("Predicted GPA", round ? Math.round(sum / count * Math.pow(10,rounddecimals)) / Math.pow(10,rounddecimals) : sum / count)},300)
       })
+    } else {
+  LoopToast.showError("Not on Results Page", "This script currently only works on the Results page.");
+}
