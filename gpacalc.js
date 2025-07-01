@@ -10,7 +10,7 @@ function roundToGPAConstant(value) {
     }
     return +(intPart + closest).toFixed(rounddecimals);
 }
-setTimeout(() => {
+
 if (window.location.href.includes("Assessment_Results")) {
   var term = prompt("Enter Term (1, 2, 3, or 4, to do multiple use spaces, such as '1 2')");
   
@@ -47,13 +47,13 @@ if (window.location.href.includes("Assessment_Results")) {
                       }
                     });
                     avgGPA = count ? (sum/count) : 0;
-                    
                   })
                 })
               }
             })
           });
           LoopToast.showSuccess("Predicted GPA", round ? roundToGPAConstant(avgGPA) : avgGPA)
+          
         });
         
       } catch (e) {
@@ -63,4 +63,3 @@ if (window.location.href.includes("Assessment_Results")) {
 } else {
   LoopToast.showError("Not on Results Page", "This script currently only works on the Results page.");
 }
-},300)
