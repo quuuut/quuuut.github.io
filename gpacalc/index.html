@@ -11,7 +11,9 @@
 </head>
 
 <body>
-
+    <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="black" class="bi bi-arrow-up pointer" viewBox="0 0 100 100">
+        <path fill-rule="evenodd" d="M 50 93.75 C 51.726562 93.75 53.125 92.351562 53.125 90.625 L 53.125 16.917969 L 72.789062 36.585938 C 74.007812 37.808594 75.992188 37.808594 77.210938 36.585938 C 78.433594 35.367188 78.433594 33.382812 77.210938 32.164062 L 52.210938 7.164062 C 51.625 6.574219 50.832031 6.246094 50 6.246094 C 49.167969 6.246094 48.375 6.574219 47.789062 7.164062 L 22.789062 32.164062 C 21.566406 33.382812 21.566406 35.367188 22.789062 36.585938 C 24.007812 37.808594 25.992188 37.808594 27.210938 36.585938 L 46.875 16.917969 L 46.875 90.625 C 46.875 92.351562 48.273438 93.75 50 93.75"/>
+    </svg>
     <style>
         body {
             background: linear-gradient(147deg, rgba(42, 155, 132, 1) 0%, rgba(87, 199, 133, 1) 18%, rgba(237, 221, 83, 1) 100%);
@@ -32,6 +34,33 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        .pointer {
+            position: fixed;
+            float: right;
+            top: 20px;
+            right: 250px;
+            animation: bounce 1s infinite alternate, enter 1s forwards;
+            display: none;
+        }
+
+        @keyframes bounce {
+            0% {
+                transform: translateY(925px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+        @keyframes enter {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
     </style>
     <div class="card card-slide-up shadow-lg font-monospace " style="width: 35rem; background: #fff; color: #222">
         <div class="card-body" style="margin-left: 20px;">
@@ -50,12 +79,12 @@
                 <ol class="mb-0 ps-3">
                     <li>
                         Drag
-                        <a style="font-size: 0px; cursor: grab;" class="btn btn-primary btn-sm" 
+                        <a style="font-size: 0px; cursor: grab;" class="btn btn-primary btn-sm" ondragstart="document.querySelector('.pointer').style = 'display: block;'" ondragend="document.querySelector('.pointer').style = 'display: none;'"
                             href="javascript: var round = true; var rounddecimals = 2;var count = 0; var sum = 0;LoopToast.showInfo(&quot;Fetching...&quot;, &quot;Fetching...&quot;); fetch(&quot;https://raw.githubusercontent.com/quuuut/quuuut.github.io/refs/heads/main/gpacalc.js&quot;).then(function (resp){LoopToast.showSuccess(&quot;Fetched!&quot;, &quot;Running...&quot;);resp.text().then(function(text){setTimeout(()=>{eval(text)},300)})})">GPA
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill" viewBox="0 0 16 16">
   <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
 </svg>
-                        </a> to your bookmarks bar
+                        </a> to your bookmarks bar, if it isn't there do Ctrl+Shift+B
                     </li>
                     <br/>
                     <li>Open <a href="https://gihs.daymap.net/daymap/student/portfolio.aspx?tab=Assessment_Results" class="btn btn-sm btn-primary fs-6">Daymap results page</a></li>
