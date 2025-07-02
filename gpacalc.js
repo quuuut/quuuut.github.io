@@ -55,15 +55,11 @@ if (window.location.href.includes("Assessment_Results")) {
           
           
         });
-        
+        setTimeout(function(){LoopToast.showSuccess("Predicted GPA", round ? roundToGPAConstant(avgGPA) : avgGPA)}, 300)
       } catch (e) {
         LoopToast.showError("Error while fetching report:", e)
       }
     });
 } else {
   LoopToast.showError("Not on Results Page", "This script currently only works on the Results page.");
-}
-
-if (!sum == 0 || !count == 0) {
-  setTimeout(function(){LoopToast.showSuccess("Predicted GPA", round ? roundToGPAConstant(avgGPA) : avgGPA)}, 300)
 }
