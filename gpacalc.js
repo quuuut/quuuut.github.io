@@ -1,4 +1,16 @@
-var count = 0; var sum = 0; var gpas = []; var avgGPA;
+/* this bit code by redisnotblue */
+var studentID;
+if (document.getElementsByTagName("daymap-nav")) {
+    studentID = parseInt(document.getElementsByTagName("daymap-nav")[0].getAttribute("avatar-path").split("/").slice(-1)[0]);
+} else {
+    if (window.location.href.includes("Assessment_Results")) {
+        studentID = _studentID;
+    } else {
+        LoopToast.showError("Not on Results Page", "This script currently only works on the Results page.")
+    }
+}
+/* ends here */
+var count = 0; var sum = 0; var gpas = []; var avgGPA; /* missing vars?? */ var round = true; var rounddecimals = 2;
 function roundToGPAConstant(value) {
     var allowedDecimals = [0.00, 0.14, 0.29, 0.43, 0.57, 0.71, 0.84];
     var intPart = Math.floor(value);
@@ -11,7 +23,7 @@ function roundToGPAConstant(value) {
     return +(intPart + closest).toFixed(rounddecimals);
 }
 
-if (window.location.href.includes("Assessment_Results")) {
+if (studentID) {
   var term = prompt("Enter Term (1, 2, 3, or 4, to do multiple use spaces, such as '1 2')");
   
     fetch("/daymap/curriculum/ResultFilters.aspx", {
@@ -32,7 +44,7 @@ if (window.location.href.includes("Assessment_Results")) {
                   'headers': {
                     'content-type': 'application/json'
                   },
-                  'body': `{'id':${_studentID},'classId':0,'viewMode':'tabular','allCompleted':false,'taskType':0,'fromDate':'${el.value.split("|")[2]}T00:00:00.000Z','toDate':'${el.value.split("|")[3]}T00:00:00.000Z'}`,
+                  'body': `{'id':${studentID},'classId':0,'viewMode':'tabular','allCompleted':false,'taskType':0,'fromDate':'${el.value.split("|")[2]}T00:00:00.000Z','toDate':'${el.value.split("|")[3]}T00:00:00.000Z'}`,
                   'method': 'POST',
                   'mode': 'cors',
                   'credentials': 'include'
@@ -60,6 +72,4 @@ if (window.location.href.includes("Assessment_Results")) {
         LoopToast.showError("Error while fetching report:", e)
       }
     });
-} else {
-  LoopToast.showError("Not on Results Page", "This script currently only works on the Results page.");
 }
