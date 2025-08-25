@@ -24,7 +24,7 @@ function roundToGPAConstant(value) {
 }
 
 var term = prompt("Enter Term (1, 2, 3, or 4, to do multiple use spaces, such as '1 2')");
-
+var currentYear = new Date().getFullYear()
 fetch("/daymap/curriculum/ResultFilters.aspx", {
   "headers": {
     "accept": "text/html"
@@ -36,8 +36,7 @@ fetch("/daymap/curriculum/ResultFilters.aspx", {
   try {
     resp.text().then(function (text) {
       LoopToast.showInfo("Calculating", "Calculating average...");
-      new DOMParser().parseFromString(text, "text/html").querySelector("optgroup[label]").childNodes.forEach((el) => {
-        var currentYear = prompt("Enter year, leave blank for this year", new Date().getFullYear())
+      new DOMParser().parseFromString(text, "text/html").querySelectorAll("optgroup[label]")[1].childNodes.forEach((el) => {
         term.split(" ").forEach((t) => {
           if (el.innerText == `${currentYear} Term ${t}`) {
             fetch('/daymap/student/portfolio.aspx/AssessmentReport', {
