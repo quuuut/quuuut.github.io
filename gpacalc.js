@@ -51,9 +51,9 @@ fetch("/daymap/curriculum/ResultFilters.aspx", {
       LoopToast.showInfo("Calculating", "Calculating average...");
       
       var promises = [];
-      new DOMParser().parseFromString(text, "text/html").querySelector("optgroup[label]").childNodes.forEach((el) => {
+      new DOMParser().parseFromString(text, "text/html").querySelectorAll("optgroup[label]")[1].childNodes.forEach((el) => {
         term.split(" ").forEach((t) => {
-          if (el.innerText == `Term ${t}`) {
+          if (el.innerText == `${new Date().getFullYear()} Term ${t}`) {
             var promise = fetch('/daymap/student/portfolio.aspx/AssessmentReport', {
               'headers': {
                 'content-type': 'application/json'
