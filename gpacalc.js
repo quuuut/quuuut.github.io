@@ -37,7 +37,7 @@ function roundToGPAConstant(value) {
 }
 
 var term = prompt("Enter Term (1, 2, 3, or 4, to do multiple use spaces, such as '1 2')");
-
+var currentYear = new Date().getFullYear()
 fetch("/daymap/curriculum/ResultFilters.aspx", {
   "headers": {
     "accept": "text/html"
