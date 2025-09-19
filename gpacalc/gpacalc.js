@@ -1,5 +1,4 @@
 (() => {
-/* this bit code by redisnotblue (modified by quuuut)*/
 var studentID;
 if (document.querySelector("daymap-nav")) {
     studentID = parseInt(document.querySelector("daymap-nav").getAttribute("avatar-path").split("/").slice(-1)[0]);
@@ -10,12 +9,7 @@ if (document.querySelector("daymap-nav")) {
         DMU.toast({title: "Error", message: "This script does not work on this page", toastStyle: "error"});
     }
 }
-/* ends here */
-
-var count = 0; 
-var sum = 0; 
-var gpas = []; 
-var avgGPA;
+var weightedGpas = [];
 
 function roundToGPAConstant(value) {
     var allowedValues = [];
@@ -37,8 +31,21 @@ function roundToGPAConstant(value) {
     return closest;
 }
 
+function gradeToNumber(grade) {
+    var gradeMap = {
+        'A+': 15, 'A': 14, 'A-': 13,
+        'B+': 12, 'B': 11, 'B-': 10,
+        'C+': 9, 'C': 8, 'C-': 7,
+        'D+': 6, 'D': 5, 'D-': 4,
+        'E+': 3, 'E': 2, 'E-': 1,
+        'F': 0
+    };
+    return gradeMap[grade] || 0;
+}
+
 var term = prompt("Enter Term (1, 2, 3, or 4, to do multiple use spaces, such as '1 2')");
 var currentYear = new Date().getFullYear()
+
 fetch("/daymap/curriculum/ResultFilters.aspx", {
   "headers": {
     "accept": "text/html"
@@ -50,7 +57,7 @@ fetch("/daymap/curriculum/ResultFilters.aspx", {
   try {
     resp.text().then(function (text) {
       DMU.toast({title: "Calculating", message: "Calculating average...", toastStyle: "info"});
-      
+     
       var promises = [];
       new DOMParser().parseFromString(text, "text/html").querySelectorAll("optgroup[label]")[1].childNodes.forEach((el) => {
         term.split(" ").forEach((t) => {
@@ -65,25 +72,66 @@ fetch("/daymap/curriculum/ResultFilters.aspx", {
               'credentials': 'include'
             }).then(function (response) {
               return response.text().then(function (text) {
-                new DOMParser().parseFromString(text, 'text/html').querySelectorAll('b').forEach((el) => {
-                  if (el.innerText.includes("GPA")) {
-                    var gpa = Number(el.innerText.split(": ")[1]);
-                    gpas.push(gpa);
-                    sum += gpa;
-                    count++;
+                var doc = new DOMParser().parseFromString(text, 'text/html');
+                
+                var tables = doc.querySelectorAll('tbody');
+                var tempWeightedGpas = [];
+                
+                tables.forEach((table) => {
+                  var rows = table.querySelectorAll('tr');
+                  var subjectGradeSum = 0;
+                  var subjectWeightSum = 0;
+                  var hasWeightedTotal = false;
+                  var subjectGPA = 0;
+                  
+                  rows.forEach((row) => {
+                    var cells = row.querySelectorAll('td, th');
+                    if (cells.length >= 5) {
+                      if (cells[4] && cells[4].innerHTML.includes('Weighted total')) {
+                        var weightedTotal = parseFloat(cells[4].innerHTML.match(/(\d+(?:\.\d+)?)%/)?.[1] || 0);
+                        if (weightedTotal > 0) {
+                          // Don't convert, use the actual GPA from the next row
+                          hasWeightedTotal = true;
+                        }
+                      }
+                      else if (cells[4] && cells[4].innerHTML.includes('GPA for')) {
+                        var schoolGPA = parseFloat(cells[4].innerHTML.match(/GPA for [^:]+: ([\d.]+)/)?.[1] || 0);
+                        subjectGPA = schoolGPA;
+                      }
+                      else if (cells[2] && cells[3] && !hasWeightedTotal) {
+                        var weight = parseFloat(cells[2].innerText);
+                        var grade = cells[3].innerText.trim();
+                        if (weight > 0 && grade && grade !== 'Type' && grade !== 'Weighting') {
+                          var gradeNum = gradeToNumber(grade);
+                          subjectGradeSum += gradeNum * weight;
+                          subjectWeightSum += weight;
+                        }
+                      }
+                    }
+                  });
+                  
+                  if (subjectGPA > 0) {
+                    tempWeightedGpas.push(subjectGPA);
+                  }
+                  else if (subjectWeightSum > 0) {
+                    var calculatedGPA = (subjectGradeSum / subjectWeightSum);
+                    tempWeightedGpas.push(calculatedGPA);
                   }
                 });
+                
+                weightedGpas = weightedGpas.concat(tempWeightedGpas);
               });
             });
             promises.push(promise);
           }
         });
       });
-      
+     
       Promise.all(promises).then(function() {
-        avgGPA = count ? (sum/count) : 0;
+        var weightedAvg = weightedGpas.length ? (weightedGpas.reduce((a,b) => a+b, 0) / weightedGpas.length) : 0;
+        
         setTimeout(function(){
-          DMU.toast({title: "Predicted GPA", message: round ? roundToGPAConstant(avgGPA) : avgGPA, toastStyle: "success"});
+          DMU.toast({title: "Predicted GPA", message: roundToGPAConstant(weightedAvg), toastStyle: "success"});
         }, 300);
       });
     });
