@@ -1,3 +1,6 @@
+(() => {
+LoopToast.showWarning("Warning", "<a href='https://quuuut.github.io/gpacalc?from=bookmarklet'>This script is to be moved, please click on this text to get the new version</a>");
+
 /* this bit code by redisnotblue (modified by quuuut)*/
 var studentID;
 if (document.querySelector("daymap-nav")) {
@@ -90,3 +93,4 @@ fetch("/daymap/curriculum/ResultFilters.aspx", {
     LoopToast.showError("Error while fetching report:", e);
   }
 });
+})();

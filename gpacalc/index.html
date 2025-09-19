@@ -91,12 +91,18 @@
                     <li id="bookmark" style="display: none;">Press <code
                             class="border bg-dark-subtle rounded-3">‎ Ctrl+Shift+B‎ ‎ </code></li>
                     <br id="bookmark1" style="display: none;">
+                    <div id="bookmarkletRemove" style="display: none;">
+                        <li>Right click the bookmark called "GPA"</li>
+                        <br>
+                        <li>Click "Remove"</li>
+                        <br>
+                    </div>
                     <li>
                         Drag
                         <a id="bookmarklet" style="font-size: 0px; cursor: grab;" class="btn btn-primary btn-sm"
                             ondragstart="document.querySelector('.pointer').style = 'display: block;'"
                             ondragend="document.querySelector('.pointer').style = 'display: none;'"
-                            href="javascript: var round = true; var rounddecimals = 2; LoopToast.showInfo(&quot;Fetching...&quot;, &quot;Fetching...&quot;); fetch(&quot;https://raw.githubusercontent.com/quuuut/quuuut.github.io/refs/heads/main/gpacalc.js&quot;).then(function (resp){LoopToast.showSuccess(&quot;Fetched!&quot;, &quot;Running...&quot;);resp.text().then(function(text){setTimeout(()=>{eval(text)},300)})})">GPA
+                            href="javascript: var round = true; var rounddecimals = 2; DMU.toast({title: 'Fetching...', message: 'Fetching...', toastStyle: 'info'}); fetch('https://raw.githubusercontent.com/quuuut/quuuut.github.io/refs/heads/main/gpacalc/gpacalc.js').then(function (resp){if (!resp.ok) {DMU.toast({title: 'Error', message: 'Failed to fetch: '+resp.status, toastStyle: 'error'}); return}; DMU.toast({title: 'Fetched!', message: 'Running...', toastStyle: 'success'});resp.text().then(function(text){setTimeout(()=>{eval(text)},300)})})">GPA
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                                 class="bi bi-bookmark-fill" viewBox="0 0 16 16">
                                 <path
@@ -105,8 +111,7 @@
                         </a> to your bookmarks bar
                     </li>
                     <br />
-                    <li>Open <a href="https://gihs.daymap.net/daymap/student/portfolio.aspx?tab=Assessment_Results"
-                            class="btn btn-sm btn-primary fs-6" target="_blank">Daymap results page</a></li>
+                    <li>Open Daymap</a></li>
                     <br>
                     <li>Click the bookmark called "GPA"</li>
                 </ol>
@@ -127,7 +132,9 @@
     <script>
         window.addEventListener('load', function () {
             // document.querySelector("#bookmarklet").addEventListener("dragstart", function(event) {
-
+            if (window.location.search.replace("?","").includes("from=bookmarklet")) {
+                document.querySelector("#bookmarkletRemove").style.display = "";
+            }
             // })
             document.querySelector('.card-slide-up').classList.add('show');
             if (!bookmarksOpen(window.innerHeight)) {
