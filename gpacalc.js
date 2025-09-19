@@ -1,6 +1,6 @@
-(() => {
+(async () => {
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms)); 
 LoopToast.showWarning("Warning", "<a href='https://quuuut.github.io/gpacalc?from=bookmarklet'>This script is to be moved, please click on this text to get the new version</a>");
-
 /* this bit code by redisnotblue (modified by quuuut)*/
 var studentID;
 if (document.querySelector("daymap-nav")) {
@@ -39,6 +39,7 @@ function roundToGPAConstant(value) {
     return closest;
 }
 
+await sleep(300)
 var term = prompt("Enter Term (1, 2, 3, or 4, to do multiple use spaces, such as '1 2')");
 var currentYear = new Date().getFullYear()
 fetch("/daymap/curriculum/ResultFilters.aspx", {
