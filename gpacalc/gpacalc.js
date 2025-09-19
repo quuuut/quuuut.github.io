@@ -1,6 +1,4 @@
 (() => {
-LoopToast.showWarning("Warning", "<a href='https://quuuut.github.io/gpacalc?from=bookmarklet'>This script is to be moved, please click on this text to get the new version</a>");
-
 /* this bit code by redisnotblue (modified by quuuut)*/
 var studentID;
 if (document.querySelector("daymap-nav")) {
@@ -9,7 +7,7 @@ if (document.querySelector("daymap-nav")) {
     if (_studentID) {
         studentID = _studentID;
     } else {
-        LoopToast.showError("Switch to another page", "This script does not work on this page")
+        DMU.toast({title: "Error", message: "This script does not work on this page", toastStyle: "error"});
     }
 }
 /* ends here */
@@ -51,7 +49,7 @@ fetch("/daymap/curriculum/ResultFilters.aspx", {
 }).then(function (resp) {
   try {
     resp.text().then(function (text) {
-      LoopToast.showInfo("Calculating", "Calculating average...");
+      DMU.toast({title: "Calculating", message: "Calculating average...", toastStyle: "info"});
       
       var promises = [];
       new DOMParser().parseFromString(text, "text/html").querySelectorAll("optgroup[label]")[1].childNodes.forEach((el) => {
@@ -85,12 +83,12 @@ fetch("/daymap/curriculum/ResultFilters.aspx", {
       Promise.all(promises).then(function() {
         avgGPA = count ? (sum/count) : 0;
         setTimeout(function(){
-          LoopToast.showSuccess("Predicted GPA", round ? roundToGPAConstant(avgGPA) : avgGPA);
+          DMU.toast({title: "Predicted GPA", message: round ? roundToGPAConstant(avgGPA) : avgGPA, toastStyle: "success"});
         }, 300);
       });
     });
   } catch (e) {
-    LoopToast.showError("Error while fetching report:", e);
+    DMU.toast({title: "Error while fetching report:", message: e, toastStyle: "error"});
   }
 });
 })();
