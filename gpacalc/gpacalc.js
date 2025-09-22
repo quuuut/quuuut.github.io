@@ -6,7 +6,7 @@ if (document.querySelector("daymap-nav")) {
     if (_studentID) {
         studentID = _studentID;
     } else {
-        DMU.toast({title: "Error", message: "This script does not work on this page", toastStyle: "error"});
+        DMU.toast({message: "This script does not work on this page", toastStyle: "error"});
     }
 }
 var weightedGpas = [];
@@ -44,7 +44,6 @@ function gradeToNumber(grade) {
 }
 
 var term = prompt("Enter Term (1, 2, 3, or 4, to do multiple use spaces, such as '1 2')");
-var currentYear = new Date().getFullYear()
 
 fetch("/daymap/curriculum/ResultFilters.aspx", {
   "headers": {
@@ -56,7 +55,7 @@ fetch("/daymap/curriculum/ResultFilters.aspx", {
 }).then(function (resp) {
   try {
     resp.text().then(function (text) {
-      DMU.toast({title: "Calculating", message: "Calculating average...", toastStyle: "info"});
+      DMU.toast({message: "Calculating average...", toastStyle: "info"});
      
       var promises = [];
       new DOMParser().parseFromString(text, "text/html").querySelectorAll("optgroup[label]")[1].childNodes.forEach((el) => {
@@ -131,12 +130,12 @@ fetch("/daymap/curriculum/ResultFilters.aspx", {
         var weightedAvg = weightedGpas.length ? (weightedGpas.reduce((a,b) => a+b, 0) / weightedGpas.length) : 0;
         
         setTimeout(function(){
-          DMU.toast({title: "Predicted GPA", message: roundToGPAConstant(weightedAvg), toastStyle: "success"});
+          DMU.toast({message: roundToGPAConstant(weightedAvg), toastStyle: "success"});
         }, 300);
       });
     });
   } catch (e) {
-    DMU.toast({title: "Error while fetching report:", message: e, toastStyle: "error"});
+    DMU.toast({message: `Error: ${e}`, toastStyle: "error"});
   }
 });
 })();
